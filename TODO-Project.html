@@ -97,31 +97,31 @@ function showtask() {
       const html = `
         <div> ${name} </div> 
         <div> ${date} </div> 
+
+
+
         <button onclick="
-          todoList.splice(${i},1);
-        
-          showtask(); 
-          localStorage.setItem('todoList', JSON.stringify(todoList));
+          
+          deleteTask(${i});
 
         " class="delete-todo-button">Delete</button>
+
+
+
+
 
         <button id="openPopup${i}" class="update-todo-button">Update</button>
 
         <div class="popup" id="myPopup${i}">
           <div class="todo-input-grid">
-            <input placeholder="Enter task" class="js-task-update name-input">
-            <input type="date" class="js-date-update date-input">
-            <button onclick="
-              const inputElement = document.querySelector('.js-task-update');
-              const name = inputElement.value;
-              const dateInputElement = document.querySelector('.js-date-update');
-              const date = dateInputElement.value;
-              todoList.splice(${i},1,{name,date});
-              showtask(); 
-              localStorage.setItem('todoList', JSON.stringify(todoList));
-            "class="add-todo-button">Update</button>
+            <input id="task-update${i}" placeholder="Enter task" class="name-input">
+            <input id="date-update${i}" type="date" class="date-input">
+            
+            <button onclick="updateTask(${i})" class="update-todo-button">Update</button>
+
           </div>
           <button type="button" id="closePopup${i}" class="delete-todo-button">Close</button> 
+
         </div>
       `;
       listHtml += html;
@@ -144,6 +144,34 @@ function showtask() {
     }
 }
 
+    function deleteTask(index){
+      todoList.splice(index,1);
+        
+          showtask(); 
+          localStorage.setItem('todoList', JSON.stringify(todoList));
+    }
+
+    function updateTask(index) {
+    const nameInput = document.querySelector(`#task-update${index}`);
+    const dateInput = document.querySelector(`#date-update${index}`);
+
+    const newName = nameInput.value;
+    const newDate = dateInput.value;
+
+    // Update the task in the todoList array
+    todoList[index].name = newName;
+    todoList[index].date = newDate;
+
+    // Save the updated todoList to localStorage
+    localStorage.setItem('todoList', JSON.stringify(todoList));
+
+    // Refresh the displayed tasks
+    showtask();
+
+    // Hide the popup
+    const popup = document.getElementById(`myPopup${index}`);
+    popup.style.display = "none";
+}
 
 
 
